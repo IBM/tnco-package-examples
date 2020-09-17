@@ -1,0 +1,80 @@
+---
+- name: Delete the apache stack
+  hosts: >
+    {% if properties is defined and properties.remote_host is defined %}
+      remote
+    {% else %}
+      localhost
+    {% endif %}   
+  tasks:  
+  
+  - fail: msg="Associated topology is not defined."
+    when: associated_topology is undefined or associated_topology.keys()|length == 0
+    
+  - name: Retrieve the stack id
+    set_fact:
+      input_stack_id: "{{ item.value.id }}"
+    with_dict: "{{ associated_topology }}"
+    
+  - name: Get the token 
+    register: get_token
+    uri:
+      url: "{{ deployment_location.properties.os_api_url }}{{ deployment_location.properties.os_auth_api }}/auth/tokens"
+      method: POST
+      status_code: 201
+      body_format: json
+      body: 
+        auth: 
+          identity: 
+            methods: ["password"]
+            password: 
+              user:
+               domain: 
+                 name: "{{ deployment_location.properties.os_auth_user_domain_name }}"
+               name: "{{ deployment_location.properties.os_auth_username }}"
+               password: "{{ deployment_location.properties.os_auth_password }}"
+            scope: 
+              project:
+                domain: 
+                  name: "{{ deployment_location.properties.os_auth_project_domain_name }}"
+
+  - name: Set the token
+    set_fact:
+      auth_token: "{{ get_token.x_subject_token }}"
+
+  - name: Set heat url
+    set_fact:
+      heat_endpoint_url: "{{ item.1.url }}" 
+    with_subelements:
+      - "{{ get_token.json.token.catalog }}"
+      - endpoints
+    when: "'orchestration' in item.0.type and 'heat' in item.0.name and 'public' in item.1.interface"  
+
+  - name: "get stacks"
+    register: get_stacks
+    uri:
+      url: "{{ heat_endpoint_url }}/stacks"
+      method: GET
+      status_code: 200
+      headers:
+        X-Auth-Token: "{{ auth_token }}"
+
+  - name: "find the stack by id"
+    set_fact:
+      stack_to_delete: "{{ item }}"
+    loop:
+       "{{ get_stacks.json.stacks }}"
+    when: "item.id == input_stack_id"  
+
+  - fail: msg="The stack with stack id {{ input_stack_id }} does not exist."
+    when: stack_to_delete is undefined
+
+  - name: "delete the stack entry by name"
+    register: delete_stack
+    uri:
+      url: "{{ heat_endpoint_url }}/stacks/{{ stack_to_delete.stack_name }}/{{ stack_to_delete.id }}"
+      method: DELETE
+      status_code: 204
+      headers:
+        X-Auth-Token: "{{ auth_token }}"
+      

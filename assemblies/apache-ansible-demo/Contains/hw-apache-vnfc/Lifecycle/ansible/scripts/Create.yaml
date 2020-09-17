@@ -1,0 +1,52 @@
+---
+- name: Create the apache stack
+  hosts: >
+    {% if properties is defined and properties.remote_host is defined %}
+      remote
+    {% else %}
+      localhost
+    {% endif %}
+  tasks:
+  
+  - name: Copy the heat template to the remote host
+    copy:
+      src: "./Openstack/heat.yaml"
+      dest: "/tmp/heat.yaml"
+      
+  - name: Create a new stack
+    register: stack_create
+    os_stack:
+      name: "apache_ansible{{ lookup('password', '/dev/null chars=ascii_letters,digits length=8') | to_uuid }}"
+      tag: "apache_ansible_tag"
+      state: present
+      auth:
+        auth_url: "{{ deployment_location.properties.os_api_url }}{{ deployment_location.properties.os_auth_api }}"
+        username: "{{ deployment_location.properties.os_auth_username }}"
+        password: "{{ deployment_location.properties.os_auth_password }}"
+        project_name: "{{ deployment_location.properties.os_auth_project_name }}"
+        project_domain_name: "{{ deployment_location.properties.os_auth_project_domain_name }}"
+        user_domain_name: "{{ deployment_location.properties.os_auth_user_domain_name }}"
+      template: "/tmp/heat.yaml"
+      parameters:
+        key_name: default
+        image_id: bionic-server-cloudimg-amd64.img
+        flavor: m1.small
+        
+  - name: set associated topology
+    set_fact:
+      associated_topology={"{{ stack_create.stack.name }}":{"id":"{{ stack_create.id }}","type":"Openstack"}}
+
+  - name: set public ip
+    set_fact:
+      output__public_ip: "{{ item.output_value }}"
+    loop:
+       "{{ stack_create.stack.outputs }}"
+    when: "'public_ip' in item.output_key"
+
+  - name: set internal ip
+    set_fact:
+      output__internal_ip: "{{ item.output_value }}"
+    loop:
+       "{{ stack_create.stack.outputs }}"
+    when: "'internal_ip' in item.output_key"
+      

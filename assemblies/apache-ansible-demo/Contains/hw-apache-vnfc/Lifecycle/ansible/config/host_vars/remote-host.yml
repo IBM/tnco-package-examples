@@ -1,0 +1,5 @@
+---
+ansible_host: "{{ properties.remote_host }}"
+ansible_user: "{{ properties.remote_user }}"
+ansible_ssh_pass: "{{ properties.remote_pass }}"
+

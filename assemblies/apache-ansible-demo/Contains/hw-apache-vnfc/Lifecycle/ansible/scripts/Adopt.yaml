@@ -1,0 +1,110 @@
+---
+- name: Adopt the apache stack
+  hosts: >
+    {% if properties is defined and properties.remote_host is defined %}
+      remote
+    {% else %}
+      localhost
+    {% endif %}
+  tasks: 
+  - name: Retrieve the stack id
+    set_fact:
+      input_stack_id: "{{ item.value.id }}"
+    with_dict: "{{ associated_topology }}"
+    
+  - name: Get the token 
+    register: get_token
+    uri:
+      url: "{{ deployment_location.properties.os_api_url }}{{ deployment_location.properties.os_auth_api }}/auth/tokens"
+      method: POST
+      status_code: 201
+      body_format: json
+      body: 
+        auth: 
+          identity: 
+            methods: ["password"]
+            password: 
+              user:
+               domain: 
+                 name: "{{ deployment_location.properties.os_auth_user_domain_name }}"
+               name: "{{ deployment_location.properties.os_auth_username }}"
+               password: "{{ deployment_location.properties.os_auth_password }}"
+            scope: 
+              project:
+                domain: 
+                  name: "{{ deployment_location.properties.os_auth_project_domain_name }}"
+
+  - name: Set the token
+    set_fact:
+      auth_token: "{{ get_token.x_subject_token }}"
+
+  - name: Set heat url
+    set_fact:
+      heat_endpoint_url: "{{ item.1.url }}" 
+    with_subelements:
+      - "{{ get_token.json.token.catalog }}"
+      - endpoints
+    when: "'orchestration' in item.0.type and 'heat' in item.0.name and 'public' in item.1.interface"  
+
+  - name: "get stacks"
+    register: get_stacks
+    uri:
+      url: "{{ heat_endpoint_url }}/stacks"
+      method: GET
+      status_code: 200
+      headers:
+        X-Auth-Token: "{{ auth_token }}"
+
+  - name: "find the stack by id"
+    set_fact:
+      stack_to_adopt: "{{ item }}"
+    loop:
+       "{{ get_stacks.json.stacks }}"
+    when: "item.stack_status in ['CREATE_COMPLETE','ADOPT_COMPLETE','RESUME_COMPLETE','CHECK_COMPLETE','UPDATE_COMPLETE'] and item.id == input_stack_id"  
+
+  - fail: msg="Either the stack with stack id {{ input_stack_id }} does not exist or it is in a state that is not compatible with an adopt intent."
+    when: stack_to_adopt is undefined
+
+  - name: "get the stack entry by name"
+    register: get_stack_to_adopt
+    uri:
+      url: "{{ heat_endpoint_url }}/stacks/{{ stack_to_adopt.stack_name }}/{{ stack_to_adopt.id }}"
+      method: GET
+      status_code: 200
+      headers:
+        X-Auth-Token: "{{ auth_token }}"
+
+  - name: set public ip
+    set_fact:
+      output__public_ip: "{{ item.output_value }}"
+    loop:
+       "{{ get_stack_to_adopt.json.stack.outputs }}"
+    when: "'public_ip' in item.output_key"
+
+  - name: set internal ip
+    set_fact:
+      output__internal_ip: "{{ item.output_value }}"
+    loop:
+       "{{ get_stack_to_adopt.json.stack.outputs }}"
+    when: "'internal_ip' in item.output_key"
+
+  - name: add apache host for the next play
+    add_host:
+      name: "{{ output__public_ip }}"
+      ansible_user: ubuntu
+      ansible_ssh_pass: ubuntu
+      ansible_become_pass: ubuntu
+      ansible_sudo_pass: ubuntu
+      group: adopted-apache
+      ansible_ssh_common_args: >
+        {% if properties is defined and properties.jumphost_ip is defined %}
+           -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ProxyCommand='sshpass -p "{{ properties.jumphost_password }}" ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -W %h:%p "{{ properties.jumphost_user }}"@"{{ properties.jumphost_ip }}"'
+        {% endif %}
+      
+- name: Verify the apache server
+  hosts: adopted-apache
+  tasks:
+  - name: check the apache server status
+    service_facts:
+  - fail: msg="The apache server is not running"
+    when: ansible_facts.services['apache2.service'] is undefined or ansible_facts.services['apache2.service'].state != 'running'
