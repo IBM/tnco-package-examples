@@ -1,0 +1,23 @@
+- name: Install
+  hosts: apache
+  become: yes
+  gather_facts: False
+  tasks:
+  - name: Pause for Python
+    raw: while [ -z "$(command -v python)" ]; do sleep 1; done
+  - name: Prevent apache2 auto-starting on install)
+    shell: ln -s /dev/null /etc/systemd/system/apache2.service
+  - name: Install apache2
+    apt:
+      update_cache: yes
+      name: apache2
+    register: apache_install
+    until: '(apache_install["stderr"]|length == 0) or ("Could not get lock" not in apache_install["stderr"])'
+    retries: 60
+    delay: 1
+  - name: Verify service apache2
+    systemd:
+      name: apache2
+      state: started
+      enabled: yes
+      masked: no

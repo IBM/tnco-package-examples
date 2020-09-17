@@ -1,0 +1,10 @@
+---
+ansible_host: "{{ properties.public_ip }}"
+ansible_user: ubuntu
+ansible_ssh_pass: ubuntu
+ansible_become_pass: ubuntu
+ansible_sudo_pass: ubuntu
+ansible_ssh_common_args: >
+  {% if properties is defined and properties.jumphost_ip is defined %}
+     -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ProxyCommand='sshpass -p "{{ properties.jumphost_password }}" ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -W %h:%p "{{ properties.jumphost_user }}"@"{{ properties.jumphost_ip }}"'
+  {% endif %}
