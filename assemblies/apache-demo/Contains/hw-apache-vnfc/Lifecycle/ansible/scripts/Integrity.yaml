@@ -1,5 +1,0 @@
-- name: Integrity
-  hosts: apache
-  become: yes
-  gather_facts: False
-  tasks:

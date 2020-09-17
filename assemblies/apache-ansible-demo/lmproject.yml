@@ -1,9 +1,0 @@
-schema: '2.0'
-name: apache-ansible-demo
-version: '1.0'
-type: Assembly
-contains:
-- name: hw-apache-vnfc
-  type: Resource
-  resource-manager: brent
-  directory: hw-apache-vnfc
