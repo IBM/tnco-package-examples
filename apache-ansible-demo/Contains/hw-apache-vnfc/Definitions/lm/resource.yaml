@@ -1,5 +1,5 @@
 name: resource::hw-apache-vnfc-apache-ansible-demo::1.0
-description: descriptor for hw-apache2
+description: descriptor for hw-apache
 properties:
   key_name:
     default: default

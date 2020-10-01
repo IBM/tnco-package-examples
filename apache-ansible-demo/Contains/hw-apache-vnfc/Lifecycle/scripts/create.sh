@@ -2,34 +2,40 @@
 
 # Invokes Create, Install, Configure, Start playbooks
 
-##################################
-### Mandatory properties:
-# Deployment location:
-OS_URL="http://9.46.89.80/"
-OS_AUTH_PASSWORD="xxxxxxxx"
-OS_AUTH_PROJECT_NAME="elisabetta"
-OS_AUTH_USERNAME="elisabetta"
-
-##################################
-### Optional
+###############################################
+###
+### Properties for the OpenStack environment.
+### Corresponds to the deployment location properties
+###
+OS_URL="http://openstack-server/"
+OS_AUTH_PROJECT_NAME="openstack-project"
+OS_AUTH_USERNAME="openstack-user"
+OS_AUTH_PASSWORD="password"
 # OS_AUTH_API="identity/v3"
 # OS_AUTH_PROJECT_DOMAIN_NAME="default"
 # OS_AUTH_USER_DOMAIN_NAME="default"
+# Full path to the CA certificate
+# OS_CACERT_FILE="/root/certs/ca.pem"
+
+### Configuration parameters for the apache server:
 # APACHE_SITE="hw"
 # APACHE_SITE_ADMIN_EMAIL="host@localhost"
 # APACHE_SITE_PORT="80"
 # APACHE_SITE_GREETING_RECEIVER="world"
-#
-# Ansible hosts:
-# REMOTE_HOST="9.46.89.80"
-# REMOTE_USER="root"
-# REMOTE_PASSWORD="xxxxxxxx"
-#
-# Apache jumphost:
+
+#####################################
+### Additional properties:
+###
+# Ansible host. 
+# If set, the playbook is run remotely on the specified host.
+# REMOTE_HOST="10.0.0.2"
+# REMOTE_USER="remote-user"
+# REMOTE_PASSWORD="password"
+# Apache jumphost.
 # IP of a host in the same subnet as the floating IP address used by openstack for the apache server
-# JUMPHOST_IP="9.46.86.126"
-# JUMPHOST_USER="root"
-# JUMPHOST_PASSWORD="xxxxxxxx"
+# JUMPHOST_IP="10.0.0.3"
+# JUMPHOST_USER="jumphost-user"
+# JUMPHOST_PASSWORD="password"
 
 if [ -z "$OS_AUTH_API" ]; then
   OS_AUTH_API="identity/v3"
@@ -41,6 +47,12 @@ fi
   
 if [ -z "$OS_AUTH_USER_DOMAIN_NAME" ]; then
   OS_AUTH_USER_DOMAIN_NAME="default"
+fi
+
+if [ -z "$OS_CACERT_FILE" ]; then
+  OS_CACERT=""
+else
+  OS_CACERT="$OS_CACERT_FILE" 
 fi
 
 if [ -z "$APACHE_SITE" ]; then
@@ -62,11 +74,14 @@ fi
 
 ### Create
 deployment_location="{deployment_location: {properties: {os_api_url: '$OS_URL', os_auth_api: '$OS_AUTH_API', os_auth_password: '$OS_AUTH_PASSWORD', os_auth_project_name: '$OS_AUTH_PROJECT_NAME', os_auth_project_domain_name: '$OS_AUTH_PROJECT_DOMAIN_NAME', os_auth_user_domain_name: '$OS_AUTH_USER_DOMAIN_NAME', os_auth_username: '$OS_AUTH_USERNAME'}}}"
+properties="{properties: {"
 if [ -n "$REMOTE_HOST" ] && [ -n "$REMOTE_USER" ] && [ -n "$REMOTE_PASSWORD" ]; then
-  remote_properties="{properties: {remote_host: '$REMOTE_HOST', remote_user: '$REMOTE_USER', remote_pass: '$REMOTE_PASSWORD'}}" 
+  properties+="remote_host: '$REMOTE_HOST', remote_user: '$REMOTE_USER', remote_pass: '$REMOTE_PASSWORD', " 
 fi
+properties+="cacert_file: '$OS_CACERT'}}"
+
 echo "Creating the stack.."
-result="$( ansible-playbook  -i ../ansible/config/inventory  -e "$deployment_location" -e "$remote_properties" ../ansible/scripts/Create.yaml )"
+result="$( ansible-playbook  -i ../ansible/config/inventory  -e "$deployment_location" -e "$properties" ../ansible/scripts/Create.yaml )"
 
 ret="$?"
 echo "$result"

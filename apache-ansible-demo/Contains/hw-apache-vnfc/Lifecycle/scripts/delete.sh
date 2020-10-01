@@ -2,26 +2,32 @@
 
 # Invokes Create, Install, Configure, Start playbooks
 
-##################################
-### Mandatory properties:
-# Deployment location:
-OS_URL="http://9.46.89.80/"
-OS_AUTH_PASSWORD="xxxxxxxx"
-OS_AUTH_PROJECT_NAME="elisabetta"
-OS_AUTH_USERNAME="elisabetta"
-# Stack
-STACK_ID="eeb6a3ba-e37e-45c3-b2be-98a9b0d70384"
-
-##################################
-### Optional
+###############################################
+###
+### Properties for the OpenStack environment.
+### Corresponds to the deployment location properties
+###
+OS_URL="http://openstack-server/"
+OS_AUTH_PROJECT_NAME="openstack-project"
+OS_AUTH_USERNAME="openstack-user"
+OS_AUTH_PASSWORD="password"
 # OS_AUTH_API="identity/v3"
 # OS_AUTH_PROJECT_DOMAIN_NAME="default"
 # OS_AUTH_USER_DOMAIN_NAME="default"
-#
-# Ansible hosts:
-# REMOTE_HOST="9.46.89.80"
-# REMOTE_USER="root"
-# REMOTE_PASSWORD="xxxxxxxx"
+# Full path to the CA certificate
+# OS_CACERT_FILE="/root/certs/ca.pem"
+
+# ID of the stack to delete:
+STACK_ID="d75c2b8f-3ebd-4c8b-b7f1-6a018ace2b75"
+
+#####################################
+### Additional properties:
+###
+# Ansible host. 
+# If set, the playbook is run remotely on the specified host.
+# REMOTE_HOST="10.0.0.2"
+# REMOTE_USER="remote-user"
+# REMOTE_PASSWORD="password"
 
 if [ -z "$OS_AUTH_API" ]; then
   OS_AUTH_API="identity/v3"

@@ -8,13 +8,14 @@
 # IP of a host in the same subnet as the floating IP address used by openstack for the apache server
 APACHE_IP="10.21.28.127"
 
-##################################
-### Optional
-# Apache jumphost
+#####################################
+### Additional properties:
+###
+# Apache jumphost.
 # IP of a host in the same subnet as the floating IP address used by openstack for the apache server
-# JUMPHOST_IP="9.46.86.126"
-# JUMPHOST_USER="root"
-# JUMPHOST_PASSWORD="xxxxxxxx"
+# JUMPHOST_IP="10.0.0.3"
+# JUMPHOST_USER="jumphost-user"
+# JUMPHOST_PASSWORD="password"
 
 properties="{properties: {"
 if [ -n "$JUMPHOST_IP" ] && [ -n "$JUMPHOST_USER" ] && [ -n "$JUMPHOST_PASSWORD" ]; then

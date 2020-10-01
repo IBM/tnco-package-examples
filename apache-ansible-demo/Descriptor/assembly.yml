@@ -2,7 +2,7 @@ name: assembly::apache-ansible-demo::1.0
 description: assembly descriptor for apache
 properties:
   deploymentLocation:
-    description: the name of the location for this assemblies resources to be deploy
+    description: the name of the location for this assemblies resources to be deployed
     default: core
   resourceManager:
     description: the name of the resource manager that manages the resources

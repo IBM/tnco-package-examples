@@ -19,10 +19,11 @@
   - name: Get the token 
     register: get_token
     uri:
-      url: "{{ deployment_location.properties.os_api_url }}{{ deployment_location.properties.os_auth_api }}/auth/tokens"
+      url: "{{ deployment_location.properties.os_api_url if deployment_location.properties.os_api_url[-1] == '/' else deployment_location.properties.os_api_url + '/'}}{{ deployment_location.properties.os_auth_api }}/auth/tokens"
       method: POST
       status_code: 201
       body_format: json
+      validate_certs: False
       body: 
         auth: 
           identity: 
@@ -53,6 +54,7 @@
   - name: "get stacks"
     register: get_stacks
     uri:
+      validate_certs: False
       url: "{{ heat_endpoint_url }}/stacks"
       method: GET
       status_code: 200
@@ -72,6 +74,7 @@
   - name: "delete the stack entry by name"
     register: delete_stack
     uri:
+      validate_certs: False
       url: "{{ heat_endpoint_url }}/stacks/{{ stack_to_delete.stack_name }}/{{ stack_to_delete.id }}"
       method: DELETE
       status_code: 204
