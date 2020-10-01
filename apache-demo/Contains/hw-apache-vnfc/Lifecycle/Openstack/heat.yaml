@@ -1,0 +1,104 @@
+heat_template_version: "2018-08-31"
+description: "Base infrastructure for an Apache2 example"
+
+parameters:
+  key_name:
+    type: string
+    label: Key Name
+    description: Name of key-pair to be used for compute instance
+  image_id:
+    type: string
+    label: Image ID
+    description: Image to be used for compute instance
+  flavor:
+    type: string
+    label: Instance Type
+    description: Type of instance (flavor) to be used
+
+resources:
+  ap_security_group: 
+    type: "OS::Neutron::SecurityGroup"
+    properties: 
+      rules: 
+        - port_range_min: 1
+          port_range_max: 100
+          protocol: tcp
+        - remote_ip_prefix: 0.0.0.0/0
+          protocol: icmp
+      name: ap_security_group
+
+  ap_net: 
+    type: "OS::Neutron::Net"
+    properties: 
+      admin_state_up: true
+      name: ap_net
+
+  ap_subnet: 
+    type: "OS::Neutron::Subnet"
+    properties: 
+      network: { get_resource: ap_net }
+      name: ap_subnet
+      enable_dhcp: true
+      cidr: "10.10.10.0/24"
+  ap_port: 
+    type: "OS::Neutron::Port"
+    properties: 
+      admin_state_up: true
+      fixed_ips: 
+        - subnet: { get_resource: ap_subnet }
+      security_groups: 
+        - { get_resource: ap_security_group }
+      name: ap_port
+      network: { get_resource: ap_net }
+
+  ap_router: 
+    type: "OS::Neutron::Router"
+    properties: 
+      admin_state_up: true
+      name: ap_router
+      external_gateway_info:
+        network: "public"
+
+  ap_routerinterface: 
+    type: "OS::Neutron::RouterInterface"
+    properties: 
+      router: { get_resource: ap_router }
+      subnet: { get_resource: ap_subnet }
+
+  apache_server_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: "public"
+      port_id: { get_resource: ap_port }
+
+  apache_server: 
+    type: "OS::Nova::Server"
+    properties: 
+      networks: 
+        - port: { get_resource: ap_port }
+      name: apache_server
+      flavor: { get_param: flavor }
+      key_name: { get_param: key_name }
+      image: { get_param: image_id }
+      config_drive: true
+      user_data_format: RAW
+      user_data: |
+        #cloud-config
+        manage_etc_hosts: true
+        bootcmd: 
+         - [ sysctl, net.ipv4.ip_forward=1 ]
+         - [ sh, -c, echo 'nameserver 8.8.8.8' > /etc/resolv.conf ]
+        ssh_pwauth: True
+        password: ubuntu
+        chpasswd:
+          list: |
+            ubuntu:ubuntu
+          expire: False
+        packages:
+         - "python"
+
+outputs:
+  internal_ip: 
+    value: { get_attr: [ apache_server , first_address ] }
+  public_ip: 
+    value: { get_attr: [ apache_server_floating_ip , floating_ip_address ] }

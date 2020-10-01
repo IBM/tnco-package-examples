@@ -1,0 +1,7 @@
+---
+ansible_host: {{ properties.public_ip }}
+ansible_user: ubuntu
+ansible_ssh_pass: ubuntu
+ansible_become_pass: ubuntu
+ansible_sudo_pass: ubuntu
+

@@ -1,0 +1,10 @@
+- name: Start
+  hosts: apache
+  become: yes
+  gather_facts: False
+  tasks:
+  
+    - name: Restart apache2
+      systemd:
+        state: restarted
+        name: apache2
