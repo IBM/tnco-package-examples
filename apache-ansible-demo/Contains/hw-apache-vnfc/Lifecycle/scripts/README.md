@@ -11,7 +11,7 @@ By default, the scripts *create.sh*, *adopt.sh* and *delete.sh* run the playbook
 
 In order for the playbooks to connect via ssh to the Apache VM created by the OpenStack stack, for some of the scripts you may need to set up a jump host that has connectivity to the Apache VM.
 To set up a jump host, the optional variables *JUMPHOST_IP*, *JUMPHOST_USER*, *JUMPHOST_PASSWORD* have to be specified.
-Also, you may need to set the environment variable ANSIBLE_HOST_KEY_CHECKING to False, to prevent ssh from checking hosts identification.
+Additionally, you may need to set the environment variable ANSIBLE_HOST_KEY_CHECKING to False or to remove host entries from the known_hosts file, to prevent ssh from checking hosts identification.
 
 The *create.sh* script automates the execution of a stack lifecycle corresponding to the creation of the stack through an assembly. This means that after the Create playbook, the Install, the Configure and the Start playbooks are executed.
 

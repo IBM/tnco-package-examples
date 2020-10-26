@@ -16,6 +16,10 @@ OS_AUTH_PASSWORD="password"
 # OS_AUTH_USER_DOMAIN_NAME="default"
 # Full path to the CA certificate
 # OS_CACERT_FILE="/root/certs/ca.pem"
+# Full path to the client certificate
+# OS_CLIENT_CERT_FILE="/root/certs/cert.pem"
+# Full path to the client key
+# OS_KEY_FILE="/root/keys/key"
 
 ### Stack ID to adopt:
 STACK_ID="eeb6a3ba-e37e-45c3-b2be-98a9b0d70384"
@@ -46,10 +50,16 @@ if [ -z "$OS_AUTH_USER_DOMAIN_NAME" ]; then
   OS_AUTH_USER_DOMAIN_NAME="default"
 fi
 
-if [ -z "$OS_CACERT_FILE" ]; then
-  OS_CACERT=""
+if [ -z "$OS_CLIENT_CERT_FILE" ]; then
+  OS_CLIENT_CERT=""
 else
-  OS_CACERT="$OS_CACERT_FILE"
+  OS_CLIENT_CERT="$OS_CLIENT_CERT_FILE" 
+fi
+
+if [ -z "$OS_KEY_FILE" ]; then
+  OS_KEY=""
+else
+  OS_KEY="$OS_KEY_FILE" 
 fi
 
 deployment_location="{deployment_location: {properties: {os_api_url: '$OS_URL', os_auth_api: '$OS_AUTH_API', os_auth_password: '$OS_AUTH_PASSWORD', os_auth_project_name: '$OS_AUTH_PROJECT_NAME', os_auth_project_domain_name: '$OS_AUTH_PROJECT_DOMAIN_NAME', os_auth_user_domain_name: '$OS_AUTH_USER_DOMAIN_NAME', os_auth_username: '$OS_AUTH_USERNAME'}}}"
@@ -68,7 +78,7 @@ fi
 if [ ${#properties} -gt 14 ]; then
   properties+=", "
 fi
-properties+="os_cacert: '$OS_CACERT'}}"
+properties+="os_cacert: '$OS_CACERT',  cert_file: '$OS_CLIENT_CERT', key_file: '$OS_KEY'}}"
 
 associated_topology="{associated_topology: {stack: {id: '$STACK_ID', type: 'Openstack'}}}"
 

@@ -4,6 +4,7 @@ The lifecycle of the resources contained in the resource package is entirely man
 
 ## Content:
 [Content of the resource package](#Content-of-the-resource-package)  
+[Prerequisites to run the resource package](#Prerequisites-to-run-the-resource-package)
 [Installing the resource package](#Installing-the-resource-package)  
 
 ### Content of the resource package
@@ -21,6 +22,10 @@ For example, to create the OpenStack infrastructure, the Create playbook uses th
   
 A set of [bash scripts](./Contains/hw-apache-vnfc/Lifecycle/scripts) allow to invoke the ansible playbooks from command line. This can be useful to test alterations to the playbooks before installing the resource package.  
 
+### Prerequisites to run the resource package
+The OpenStack environment must have the Ubuntu 18.04 QCOW2 images and a *Key Pair* called *default* available on the target project.
+In order to be able to adopt a stack, the stack must be in one of the following state: 'CREATE_COMPLETE','ADOPT_COMPLETE','RESUME_COMPLETE','CHECK_COMPLETE','UPDATE_COMPLETE'.
+Depending on the OpenStack HTTPS configuration, you may want to disable SSL certificates validation in the ansible playbooks invoking the OpenStack REST API. To do that, edit the files [Create.yaml](./Contains/hw-apache-vnfc/Lifecycle/ansible/scripts/Create.yaml), [Delete.yaml](./Contains/hw-apache-vnfc/Lifecycle/ansible/scripts/Delete.yaml) and [Adopt.yaml](./Contains/hw-apache-vnfc/Lifecycle/ansible/scripts/Adopt.yaml) and uncomment the *validate_certs* parameter.
 ### Installing the resource package
 To install the resource package both REST API and [lmctl](https://github.com/IBM/lmctl) tool can be used.  
 The following instructions describe the resource package installation using the lmctl tool. Refer to the IBM Telco Network Cloud Manager Orchestration documentation for details on how to install a resource package using REST API.
