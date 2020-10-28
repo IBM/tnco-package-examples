@@ -1,4 +1,4 @@
-This example describes adopting a stack by using the apache-ansible-demo resource package, the Ansible Lifecycle Driver and IBM Telco Network Cloud Manager - Orchestration.
+This example describes adopting a stack by using the apache-ansible-demo resource package, the [Ansible Lifecycle Driver](https://github.com/IBM/ansible-lifecycle-driver) and IBM® Telco Network Cloud - Orchestration.
 
 ### Before you begin
 This example describes the steps of an Adopt scenario that uses the apache-ansible-demo resource package, the Ansible Lifecycle Driver and IBM Telco Network Cloud Manager - Orchestration.
@@ -7,13 +7,10 @@ The apache-ansible-demo contains descriptors for the creation and management of 
 
 To follow this example, you require the following prerequisites:
 
-* A public network that is named public. If your network name is not public, you must update the heat template to reflect the actual name.
-* An installed instance of IBM® Telco Network Cloud - Orchestration.
+* [Prerequisites to run the resource package](./prerequisites.md)
+* An installed instance of IBM Telco Network Cloud - Orchestration.
 * The Ansible Lifecycle Driver on-boarded.
 * The Deployment Location created that describes the OpenStack environment.
-* An OpenStack environment configured with a user, an associated project, and a deallocated floating IP.
-* A Key Pair called default available in the OpenStack project.
-* A flavor of specification m1.small defined in the OpenStack project. The flavor defines the compute, memory, and storage capacity of a virtual server, also known as an instance.
 * The system on which the example's steps are run has ansible, sshpass, and zip installed.
 * The system on which the example's steps are run and the instance of IBM Telco Network Cloud - Orchestration has connectivity to the floating IP addresses configured in OpenStack.
 
