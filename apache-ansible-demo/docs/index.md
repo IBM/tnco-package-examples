@@ -2,4 +2,4 @@
 * [Prerequisites to run the resource package](./prerequisites.md)
 * [Bash scripts included in the resource package](scripts.md)
 * [Installing the resource package](./installing.md)
-* [Adopt scenario using IBM Telco Network Manager - Orchestration](./adopt-scenario.md)
+* [Adopt scenario using IBM Telco Network Manager - Orchestration](./adopt.md)
