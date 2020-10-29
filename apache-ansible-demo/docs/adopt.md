@@ -49,32 +49,32 @@ Run the create.sh script:
 The script runs the ansible playbooks contained in the resource package to create an OpenStack stack with infrastructure resources to host an Apache server. The Apache server is then configured and started.
   
 3. Verify that the OpenStack stack is created.  
-   a. Log in to the OpenStack dashboard with your OpenStack username and password.  
-   b. Click the project menu and select the OpenStack project that you specified in the create.sh script.  
-   c. From the Orchestration menu, select Stacks. You see a new stack with a name that starts with apache_ansible.  
+   1. Log in to the OpenStack dashboard with your OpenStack username and password.  
+   2. Click the project menu and select the OpenStack project that you specified in the create.sh script.  
+   3. From the Orchestration menu, select Stacks. You see a new stack with a name that starts with apache_ansible.  
   
 4. Save the stack ID in a variable to use as an input parameter for the Adopt REST API.  
-   a. In the OpenStack dashboard, click the created stack, and then click Overview.  
-   b. Copy the stack ID, and use it to set the STACK_ID environment variable:  
+   1. In the OpenStack dashboard, click the created stack, and then click Overview.  
+   2. Copy the stack ID, and use it to set the STACK_ID environment variable:  
    ```
    export STACK_ID=<stack_id>
    ```
 
 5. Verify that the Apache server is up and running:  
-   a. From the stack Overview, collect the value of the public_ip parameter. The public_ip parameter is the IP address that is associated with the Apache server on the public network.  
-   b. Paste the IP address into a web browser that has connectivity to the OpenStack public network.  
-   c. Confirm the Apache server is running. You see the following message in the web browser:  
+   1. From the stack Overview, collect the value of the public_ip parameter. The public_ip parameter is the IP address that is associated with the Apache server on the public network.  
+   2. Paste the IP address into a web browser that has connectivity to the OpenStack public network.  
+   3. Confirm the Apache server is running. You see the following message in the web browser:  
    ```
    Hello, world
    Success!
    ```
 
 6. Set up the environment to invoke the IBM Telco Network Cloud - Orchestration REST API.  
-   a. Set the TNCO_URL environment variable to point to the API URL:  
+   1. Set the TNCO_URL environment variable to point to the API URL:  
    ```
    export TNCO_URL=<ishtar_route>
    ```  
-   b. Set the TNCO_TOKEN environment variable to point to the access token
+   2. Set the TNCO_TOKEN environment variable to point to the access token
    ```
    export TNCO_TOKEN=<access_token>
    ```
@@ -124,12 +124,12 @@ curl -sk -0 -X POST "https://$TNCO_URL/api/intent/adoptAssembly" -H 'Authorizati
 ```
 
 10. Verify that the stack is adopted successfully.  
-    a. Open the IBM Telco Network Cloud - Orchestration UI.  
-    b. Click Recent Assembly Instances. You see the adopted assembly.  
-    c. Open the Execution History of the adopted assembly. You see a completed successful adopt lifecycle intent.  
-    d. Click Topology and verify that the public_ip property contains the Apache server IP address.  
+    1. Open the IBM Telco Network Cloud - Orchestration UI.  
+    2. Click Recent Assembly Instances. You see the adopted assembly.  
+    3. Open the Execution History of the adopted assembly. You see a completed successful adopt lifecycle intent.  
+    4. Click Topology and verify that the public_ip property contains the Apache server IP address.  
 
 11. Verify that the adopted assembly can be managed by IBM Telco Network Cloud - Orchestration.  
-    a. In the Topology View, click New Intent, and then click Make Inactive. This action triggers a Stop lifecycle transition that shuts down the Apache server.  
-    b. After the transition completes, paste the IP address of the Apache server into a web browser that has connectivity to the OpenStack public network. Verify that the Apache server is no longer reachable. You receive an HTTP error status ERR_CONNECTION_REFUSED.  
-    c. Restart the Apache server. Click New Intent and then click Make Active. Refresh the web browser page that points to the Apache server IP address. You see a message that indicates that the Apache server is up and running.
+    1. In the Topology View, click New Intent, and then click Make Inactive. This action triggers a Stop lifecycle transition that shuts down the Apache server.  
+    2. After the transition completes, paste the IP address of the Apache server into a web browser that has connectivity to the OpenStack public network. Verify that the Apache server is no longer reachable. You receive an HTTP error status ERR_CONNECTION_REFUSED.  
+    3. Restart the Apache server. Click New Intent and then click Make Active. Refresh the web browser page that points to the Apache server IP address. You see a message that indicates that the Apache server is up and running.
