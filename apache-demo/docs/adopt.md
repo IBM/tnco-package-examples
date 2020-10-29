@@ -43,7 +43,7 @@ This task comprises the following primary steps:
 1. The first task is to create a stack in OpenStack independently of IBM Telco Network Cloud - Orchestration so that it can be adopted in to IBM Telco Network Cloud - Orchestration. To create a stack, use, for example, the OpenStack command-line client that is available when you ssh on to the OpenStack system. Alternatively, you can install these components on to a local computer that has access to the OpenStack address.  
 To install the OpenStack command-line client locally, run the following command:
 ```
-pip install python-openstackclientCopy code
+pip install python-openstackclient
 ```
 For more information about installing OpenStack command-line clients, including troubleshooting openstack tools, see Install the OpenStack command-line clients.
 
@@ -66,7 +66,7 @@ For more information about installing OpenStack command-line clients, including 
    
     2. Check that the OpenStack stack is created successfully by entering:
     ```
-    openstack stack list -c "ID" -c "Stack Name" -c "Stack Status"Copy code
+    openstack stack list -c "ID" -c "Stack Name" -c "Stack Status"
     ```
 3. To communicate with your OpenStack Cluster, on-board it as a deployment location in IBM Telco Network Cloud - Orchestration.
     1. Log in to your IBM Telco Network Cloud - Orchestration UI.
@@ -84,7 +84,7 @@ For more information about installing OpenStack command-line clients, including 
     "os_auth_user_domain_name": "Default",
     "os_auth_api": "identity/v3",
     "os_api_url": "http://9.46.89.226",
-    "os_auth_project_id": "701600a059af40e1865a3c494288712a"Copy code
+    "os_auth_project_id": "701600a059af40e1865a3c494288712a"
     ```
     8. Click Save.
 4. Upload the Apache Demo Resource Package. The resource package contains the apache-demo assembly descriptor, the resource descriptor for the Apache2 server, a heat template, and configuration files. For an example resource package, see IBM/tnco-package-examples/Apache-demo.  
@@ -107,7 +107,7 @@ To access the REST API, retrieve an Access Token for Authorization.
     ```
     NAMESPACE=lifecycle-manager
     TNCO_CREDENTIALS_SECRET=alm-credentials-default
-    CLIENT_ID=AdminCopy code
+    CLIENT_ID=Admin
     ```
     2. Get the $CLIENT_SECRET is the key for clientId: Admin and decode it using base64.
     ```
@@ -115,7 +115,7 @@ To access the REST API, retrieve an Access Token for Authorization.
     ```
     3. Fetch the API PROXY_ADDRESS (Ishtar route):
     ```
-    PROXY_ADDRESS=$(oc get routes alm-ishtar -o jsonpath='{.spec.host}' -n $NAMESPACE)Copy code
+    PROXY_ADDRESS=$(oc get routes alm-ishtar -o jsonpath='{.spec.host}' -n $NAMESPACE)
     ```
     4. Set an encoded header for basic authorization:
     ```
