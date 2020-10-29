@@ -2,7 +2,7 @@ The resource package contains resource definitions and scripts that allow to man
 
 The package contains the descriptor of an assembly ([apache-ansible-demo](../Descriptor/assembly.yml)) and of a resource ([hw-apache](../Contains/hw-apache-vnfc/Definitions/lm/resource.yaml)).  
 The resource descriptor defines properties of the Apache server and of the underlying infrastructure. It also defines the characteristics of the lifecycle execution that is used to manage the resource.  
-The lifecycle definition indicates that Adopt, Create, Configure, Install, Start, Stop and Delete intents are defined for the resource and that are managed by the Ansible Lifecycle Driver.  
+The lifecycle definition indicates that Adopt, Create, Configure, Install, Start, Stop and Delete lifecycle transitions are defined for the resource and that are managed by the Ansible Lifecycle Driver.  
   
 The OpenStack infrastructure that hosts the Apache server is defined by the [HEAT template](../Contains/hw-apache-vnfc/Lifecycle/ansible/scripts/Openstack/heat.yaml).  
   
