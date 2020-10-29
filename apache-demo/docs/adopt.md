@@ -131,29 +131,29 @@ To access the REST API, retrieve an Access Token for Authorization.
     ```
 6. Run the Adopt API call to bring the stack under IBM Telco Network Cloud - Orchestration control.  
     1. Use the following JSON data to adopt the OpenStack stack created in the previous step:
-    ```
-    {
-        "assemblyName": "apacheadopt",
-        "descriptorName": "assembly::apache-demo::1.0",
-        "properties": {
-            "resourceManager": "brent",
-            "deploymentLocation": "test-openstack"
-        }, 
-        "clusters": {
-        },
-        "resources": {
-            "apacheadopt__hw-apache": {
+   
+            {
+                "assemblyName": "apacheadopt",
+                "descriptorName": "assembly::apache-demo::1.0",
                 "properties": {
+                    "resourceManager": "brent",
+                    "deploymentLocation": "test-openstack"
+                }, 
+                "clusters": {
                 },
-                "associatedTopology": [{
-                    "id": "5265adec-503e-4e8a-885a-91ba99ee57b0 ",
-                    "type": "openstack"
-                }]
+                "resources": {
+                    "apacheadopt__hw-apache": {
+                        "properties": {
+                        },
+                        "associatedTopology": [{
+                            "id": "5265adec-503e-4e8a-885a-91ba99ee57b0 ",
+                            "type": "openstack"
+                        }]
+                    }
+                }
             }
-        }
-    }
-    ```
-       **Note:** The resource name under resources conforms to the standard resource instance name syntax, that is, a string of components separated by __ characters. Each component represents a component in the descriptor or a number for clustered components, starting with the assembly instance name. In this example, hw-apache is found in the apache-examples/apache-demo/Descriptor/assembly.yml descriptor.
+  
+        **Note:** The resource name under resources conforms to the standard resource instance name syntax, that is, a string of components separated by __ characters. Each component represents a component in the descriptor or a number for clustered components, starting with the assembly instance name. In this example, hw-apache is found in the apache-examples/apache-demo/Descriptor/assembly.yml descriptor.
     2. Save the JSON content to a file named adoptRequest.json and modify the fields assemblyName, deploymentLocation, resources, and associatedTopology.id as necessary.
     3. Adopt the stack by using the following REST API call against the API:
     ```
@@ -163,12 +163,14 @@ To access the REST API, retrieve an Access Token for Authorization.
 If the adopt API request is accepted, an HTTP 201 response is returned. At this point, the assembly appears in the Recent Assembly Instances view of the IBM Telco Network Cloud - Orchestration UI. The progress of the adopt intent can be monitored by opening the assembly and selecting the Execution tab.
 The Apache assembly is successfully adopted and is under the control of IBM Telco Network Cloud - Orchestration. It is in the Active state. However, the adopt intent does not start the Apache Server and it was not started manually.
 
-8. Start the Apache server. To start the Apache server, stop and restart it in the IBM Telco Network Cloud - Orchestration UI.
+8. Start the Apache server. To start the Apache server, stop and restart it in the IBM Telco Network Cloud - Orchestration UI.  
     1. Select the apacheadopt assembly instance from Recent Assembly Instances.
     2. Click New intent, and select Make Inactive.
     3. Click New intent, and select Make Active.
-    This step ensures that the Apache server starts. To verify it is successfully running, enter the public IP address of the adopted assembly in a browser. You see the Apache server landing page.
-    **Note:** The public IP address can be found in the properties section for the assembly when you open it in the IBM Telco Network Cloud - Orchestration UI.
+    This step ensures that the Apache server starts. To verify it is successfully running, enter the public IP address of the adopted assembly in a browser. You see the Apache server landing page.</ul>
+    
+   **Note:** The public IP address can be found in the properties section for the assembly when you open it in the IBM Telco Network Cloud - Orchestration UI.
+
   
 9. Finally, because the Apache assembly is under the control of IBM Telco Network Cloud - Orchestration, you can delete it from IBM Telco Network Cloud - Orchestration.  
 To delete the apacheadopt assembly instance, click New intent, and select Uninstall.  
