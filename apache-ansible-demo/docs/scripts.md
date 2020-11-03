@@ -1,4 +1,4 @@
-The set of the scripts in this folder allows to invoke the resource package's playbooks from command line.
+The set of the scripts in the [scripts folder](../Contains/hw-apache-vnfc/Lifecycle/scripts) allows to invoke the resource package's playbooks from command line.
 
 The scripts can run on any host where ansible, openstacksdk, sshpass are installed. The OpenStack environment must have the Ubuntu 18.04 QCOW2 images and a Key Pair called *default* available on the target project.
 
