@@ -79,7 +79,7 @@ The script runs the ansible playbooks contained in the resource package to creat
    export TNCO_TOKEN=<access_token>
    ```
    
-   For more information about how to retrieve the ishtar_route and access_token parameters, see Invoking REST API.
+   For more information about how to retrieve the ishtar_route and access_token parameters, see the topic _Invoking REST API_ in the [IBM Telco Network Cloud Manager - Orchestration Knowledge Center](https://www.ibm.com/support/knowledgecenter/SSDSDC_1.3/welcome_page/kc_welcome-444.html).
 
 7. Upload the apache-ansible-demo resource package to the IBM Telco Network Cloud - Orchestration instance. You can upload resource packages and related descriptors using LMCTL or the REST API. In this example, the REST API commands are used to upload the resource package and related descriptors.
 ```
