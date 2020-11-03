@@ -18,12 +18,12 @@ To follow this example, you require the following prerequisites:
 
 1. Download the apache-ansible-demo resource package:  
 ```
-git clone https://github.com/IBM/tnco-package-examplesCopy code
+git clone https://github.com/IBM/tnco-package-examples
 ```
 
 2. Create an OpenStack stack that can be adopted by an assembly:  
 ```
-cd tnco-package-examples/apache-ansible-demo/Contains/hw-apache-vnfc/Lifecycle/scripts/Copy code
+cd tnco-package-examples/apache-ansible-demo/Contains/hw-apache-vnfc/Lifecycle/scripts/
 ```
 
 Edit the script file create.sh and customize the uncommented variables in the script:
