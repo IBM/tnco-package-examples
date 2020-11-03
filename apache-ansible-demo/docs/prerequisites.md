@@ -1,4 +1,4 @@
-To run this resource package, you require the following prerequisites:
+To be able to use this resource package, for example to execute a Create or an Adopt lifecycle transitions, you require the following prerequisites:
 
 1. An OpenStack environment configured with a user, an associated project, a deallocated floating IP, an Ubuntu 18.04 QCOW2 images and a *Key Pair* called *default* available on the target project.  
 2. For the Adopt lifecycle transition, an OpenStack stack in one of the following state: 'CREATE_COMPLETE','ADOPT_COMPLETE','RESUME_COMPLETE','CHECK_COMPLETE','UPDATE_COMPLETE'.  
