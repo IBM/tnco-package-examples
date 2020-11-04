@@ -6,7 +6,7 @@ The lifecycle definition indicates that Adopt, Create, Configure, Install, Start
   
 The OpenStack infrastructure that hosts the Apache server is defined by the [HEAT template](../Contains/hw-apache-vnfc/Lifecycle/ansible/scripts/Openstack/heat.yaml).  
   
-The lifecycle execution is implemented by [the ansible playbooks](../Contains/hw-apache-vnfc/Lifecycle/ansible/scripts). When an intent is issued against the resource, the Ansible Lifecycle Driver invokes the corresponding ansible playbook.
+The lifecycle execution is implemented by [the ansible playbooks](../Contains/hw-apache-vnfc/Lifecycle/ansible/scripts). When a lifecycle transition is executed against the resource, the Ansible Lifecycle Driver invokes the corresponding ansible playbook.
 The ansible playbooks use artefacts in the package and properties passed by the Ansible Lifecycle Driver to execute the lifecycle transition.  
 For example, to create the OpenStack infrastructure, the Create playbook uses the HEAT template and passes Ansible Lifecycle Driver properties as the input parameters to the template.
   
