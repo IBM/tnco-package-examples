@@ -1,4 +1,4 @@
-This example describes adopting a stack by using the apache-ansible-demo resource package, the [Ansible Lifecycle Driver](https://github.com/IBM/ansible-lifecycle-driver) and IBM® Telco Network Cloud - Orchestration.
+This example describes adopting a stack by using the apache-ansible-demo resource package, the [Ansible Lifecycle Driver](https://github.com/IBM/ansible-lifecycle-driver) and IBM® Telco Network Cloud Manager - Orchestration.
 
 ### Before you begin
 This example describes the steps of an Adopt scenario that uses the apache-ansible-demo resource package, the Ansible Lifecycle Driver and IBM Telco Network Cloud Manager - Orchestration.
@@ -8,11 +8,11 @@ The apache-ansible-demo contains descriptors for the creation and management of 
 To follow this example, you require the following prerequisites:
 
 * [Prerequisites to run the resource package](./prerequisites.md)
-* An installed instance of IBM Telco Network Cloud - Orchestration.
+* An installed instance of IBM Telco Network Cloud Manager - Orchestration.
 * The Ansible Lifecycle Driver on-boarded.
 * The Deployment Location created that describes the OpenStack environment.
 * The system on which the example's steps are run has ansible, sshpass, and zip installed.
-* The system on which the example's steps are run and the instance of IBM Telco Network Cloud - Orchestration has connectivity to the floating IP addresses configured in OpenStack.
+* The system on which the example's steps are run and the instance of IBM Telco Network Cloud Manager - Orchestration has connectivity to the floating IP addresses configured in OpenStack.
 * The system on which the example's steps are run has the environment variable ANSIBLE_HOST_KEY_CHECKING set to False and any host entries related to the floating IP addresses configured in OpenStack are removed from the known_hosts file
 
 ### Procedure
@@ -70,7 +70,7 @@ The script runs the ansible playbooks contained in the resource package to creat
    Success!
    ```
 
-6. Set up the environment to invoke the IBM Telco Network Cloud - Orchestration REST API.  
+6. Set up the environment to invoke the IBM Telco Network Cloud Manager - Orchestration REST API.  
    1. Set the TNCO_URL environment variable to point to the API URL:  
    ```
    export TNCO_URL=<ishtar_route>
@@ -82,13 +82,13 @@ The script runs the ansible playbooks contained in the resource package to creat
    
    For more information about how to retrieve the ishtar_route and access_token parameters, see the topic _Invoking REST API_ in the [IBM Telco Network Cloud Manager - Orchestration Knowledge Center](https://www.ibm.com/support/knowledgecenter/SSDSDC_1.3/welcome_page/kc_welcome-444.html).
 
-7. Upload the apache-ansible-demo resource package to the IBM Telco Network Cloud - Orchestration instance. You can upload resource packages and related descriptors using LMCTL or the REST API. In this example, the REST API commands are used to upload the resource package and related descriptors.
+7. Upload the apache-ansible-demo resource package to the IBM Telco Network Cloud Manager - Orchestration instance. You can upload resource packages and related descriptors using LMCTL or the REST API. In this example, the REST API commands are used to upload the resource package and related descriptors.
 ```
 cd ../../
 zip -r  apache-ansible-demo .
 curl -sk -X POST "https://$TNCO_URL/api/resource-manager/resource-packages" -H 'Authorization: Bearer '"${TNCO_TOKEN}"'' -H 'Content-Type: multipart/form-data' -F "file=@./apache-ansible-demo.zip"
 ```  
-8. Upload the resource and assembly descriptors to the IBM Telco Network Cloud - Orchestration instance:
+8. Upload the resource and assembly descriptors to the IBM Telco Network Cloud Manager - Orchestration instance:
 ```
 cd Definitions/lm
 curl -sk -H 'Accept: */*' -X POST -H 'Content-Type: application/yaml' -H 'Authorization: Bearer '"${TNCO_TOKEN}"'' "https://$TNCO_URL/api/catalog/descriptors" --data-binary @./resource.yaml
@@ -125,12 +125,12 @@ curl -sk -0 -X POST "https://$TNCO_URL/api/intent/adoptAssembly" -H 'Authorizati
 ```
 
 10. Verify that the stack is adopted successfully.  
-    1. Open the IBM Telco Network Cloud - Orchestration UI.  
+    1. Open the IBM Telco Network Cloud Manager - Orchestration UI.  
     2. Click Recent Assembly Instances. You see the adopted assembly.  
     3. Open the Execution History of the adopted assembly. You see a completed successful adopt lifecycle intent.  
     4. Click Topology and verify that the public_ip property contains the Apache server IP address.  
 
-11. Verify that the adopted assembly can be managed by IBM Telco Network Cloud - Orchestration.  
+11. Verify that the adopted assembly can be managed by IBM Telco Network Cloud Manager - Orchestration.  
     1. In the Topology View, click New Intent, and then click Make Inactive. This action triggers a Stop lifecycle transition that shuts down the Apache server.  
     2. After the transition completes, paste the IP address of the Apache server into a web browser that has connectivity to the OpenStack public network. Verify that the Apache server is no longer reachable. You receive an HTTP error status ERR_CONNECTION_REFUSED.  
     3. Restart the Apache server. Click New Intent and then click Make Active. Refresh the web browser page that points to the Apache server IP address. You see a message that indicates that the Apache server is up and running.
