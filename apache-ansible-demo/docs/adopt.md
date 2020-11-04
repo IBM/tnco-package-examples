@@ -93,7 +93,7 @@ curl -sk -X POST "https://$TNCO_URL/api/resource-manager/resource-packages" -H '
 cd Definitions/lm
 curl -sk -H 'Accept: */*' -X POST -H 'Content-Type: application/yaml' -H 'Authorization: Bearer '"${TNCO_TOKEN}"'' "https://$TNCO_URL/api/catalog/descriptors" --data-binary @./resource.yaml
 cd ../../../../Descriptor
-curl -sk -H 'Accept: */*' -X POST -H 'Content-Type: application/yaml' -H 'Authorization: Bearer '"${TNCO_TOKEN}"'' "https://$TNCO_URL/api/catalog/descriptors" --data-binary @./assembly.ymlCopy code
+curl -sk -H 'Accept: */*' -X POST -H 'Content-Type: application/yaml' -H 'Authorization: Bearer '"${TNCO_TOKEN}"'' "https://$TNCO_URL/api/catalog/descriptors" --data-binary @./assembly.yml
 ```
 9. Adopt the stack. Save the stack ID, the deployment location's name, and the name of the assembly that is created by the Adopt intent:
 ```
