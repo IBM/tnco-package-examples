@@ -13,6 +13,7 @@ To follow this example, you require the following prerequisites:
 * The Deployment Location created that describes the OpenStack environment.
 * The system on which the example's steps are run has ansible, sshpass, and zip installed.
 * The system on which the example's steps are run and the instance of IBM Telco Network Cloud - Orchestration has connectivity to the floating IP addresses configured in OpenStack.
+* The system on which the example's steps are run has the environment variable ANSIBLE_HOST_KEY_CHECKING set to False and any host entries related to the floating IP addresses configured in OpenStack are removed from the known_hosts file
 
 ### Procedure
 
@@ -31,7 +32,7 @@ Edit the script file create.sh and customize the uncommented variables in the sc
 OS_URL=<openstack-server-url>
 OS_AUTH_PROJECT_NAME=<openstack-project>
 OS_AUTH_USERNAME=<openstack-username>
-OS_AUTH_PASSWORD=<password>Copy code
+OS_AUTH_PASSWORD=<password>
 ```
 
 Where:
