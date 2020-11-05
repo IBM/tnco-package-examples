@@ -129,7 +129,7 @@ In this example, LMCTL is used to upload the resource package and related descri
                 }
             }
       ```
-        **Note:** The resource name under resources conforms to the standard resource instance name syntax, that is, a string of components separated by __ characters. Each component represents a component in the descriptor or a number for clustered components, starting with the assembly instance name. In this example, hw-apache is found in the apache-examples/apache-demo/Descriptor/assembly.yml descriptor.
+     > **Note:** The resource name under resources conforms to the standard resource instance name syntax, that is, a string of components separated by __ characters. Each component represents a component in the descriptor or a number for clustered components, starting with the assembly instance name. In this example, hw-apache is found in the apache-examples/apache-demo/Descriptor/assembly.yml descriptor.
     2. Save the JSON content to a file named adoptRequest.json and modify the fields assemblyName, deploymentLocation, resources, and associatedTopology.id as necessary.
     3. Adopt the stack by using the following REST API call against the API:
     ```
