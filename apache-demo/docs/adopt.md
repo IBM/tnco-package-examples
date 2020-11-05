@@ -1,4 +1,5 @@
-This example shows how to use this resource package, IBM® Telco Network Cloud - Orchestration and the OpenStack VIM driver to adopt a stack in OpenStack. 
+## Adopting an Openstack stack 
+This example shows how to use this resource package, _IBM® Telco Network Cloud - Orchestration_ and the _OpenStack VIM driver_ to adopt a stack in OpenStack. 
 
 ### Before beginning
 
@@ -40,6 +41,7 @@ For more information about installing OpenStack command-line clients, including 
     ```
     
     The command returns output similar to the following example. Make a note of the ID value as it is needed to adopt the stack later. It can also be retrieved from the OpenStack UI.
+    ```
     | Field               | Value                                      |
     |---------------------|--------------------------------------------|
     | id                  | 5265adec-503e-4e8a-885a-91ba99ee57b0       |
@@ -49,7 +51,7 @@ For more information about installing OpenStack command-line clients, including 
     | updated_time        | None                                       |
     | stack_status        | CREATE_IN_PROGRESS                         |
     | stack_status_reason | Stack CREATE started                       |
-   
+   ```   
     2. Check that the OpenStack stack is created successfully by entering:
     ```
     openstack stack list -c "ID" -c "Stack Name" -c "Stack Status"
