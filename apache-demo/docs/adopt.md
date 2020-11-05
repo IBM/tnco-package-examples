@@ -1,4 +1,4 @@
-## Adopting an Openstack Stack
+## Adopting an existing Openstack stack
 This example shows how to use this resource package, _IBM® Telco Network Cloud - Orchestration_ and the _OpenStack VIM driver_ to adopt a stack in OpenStack. 
 
 ### Before beginning
