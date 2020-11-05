@@ -1,4 +1,4 @@
-## Adopting an Openstack stack 
+## Adopting an Openstack Stack
 This example shows how to use this resource package, _IBM® Telco Network Cloud - Orchestration_ and the _OpenStack VIM driver_ to adopt a stack in OpenStack. 
 
 ### Before beginning
@@ -93,14 +93,17 @@ In this example, LMCTL is used to upload the resource package and related descri
   cd tnco-package-examples/apache-demo
   lmctl project push <tnco-environment-name> 
   ```
-5. Adopt the stack by way of the TNC-O REST API. For this procedure, use the curl CLI commands to access the _IBM Telco Network Cloud - Orchestration_ API.
-To access the TNC-O API, retrieve an Access Token for Authorization.
-  1. Set the TNCO_URL environment variable to point to the API URL:
-```export TNCO_URL=<ishtar_route>```
-  2. Set the TNCO_TOKEN environment variable to point to the access token
-```export TNCO_TOKEN=<access_token>```
-
-For more information about how to retrieve the `ishtar_route` and `access_token` parameters, see the topic Invoking REST API in the [IBM Telco Network Cloud Manager - Orchestration Knowledge Center](https://www.ibm.com/support/knowledgecenter/SSDSDC_1.3/welcome_page/kc_welcome-444.html).
+5. Adopt the stack by way of the TNC-O REST API. For this procedure, use the curl CLI commands to access the _IBM Telco Network Cloud - Orchestration_ API. Set up the environment to invoke the IBM Telco Network Cloud Manager - Orchestration REST API.  
+   1. Set the TNCO_URL environment variable to point to the API URL:  
+   ```
+   export TNCO_URL=<ishtar_route>
+   ```  
+   2. Set the TNCO_TOKEN environment variable to point to the access token
+   ```
+   export TNCO_TOKEN=<access_token>
+   ```
+   
+  For more information about how to retrieve the ishtar_route and access_token parameters, see the topic _Invoking REST API_ in the [IBM Telco Network Cloud Manager - Orchestration Knowledge Center](https://www.ibm.com/support/knowledgecenter/SSDSDC_1.3/welcome_page/kc_welcome-444.html).
 
 6. Run the Adopt API call to bring the stack under IBM Telco Network Cloud - Orchestration control.  
     1. Use the following JSON data to adopt the OpenStack stack created in the previous step:
