@@ -76,20 +76,23 @@ For more information about installing OpenStack command-line clients, including 
     ```
     8. Click Save.
 4. Upload the apache-demo resource package to the IBM Telco Network Cloud - Orchestration instance. The resource package contains the apache-demo assembly descriptor, the resource descriptor for the Apache2 server, a heat template, and configuration files. 
-  > **Note:** Resource packages and related descriptors can be uploaded using LMCTL or the REST API. In this example, LMCTL is used to upload the resource package and related descriptors. To upload the demo resource package, follow these steps:  
-    1. Clone the TNC-O package examples repository:
-    ```
-    git clone https://github.com/IBM/tnco-package-examples
-    ```
-    2. Retrieve the TNC-O environment on which to install the resource package:
-    ```
-    lmctl env list
-    ```
-    3. Install the Apache Demo resource package:
-    ```
-    cd tnco-package-examples/apache-demo
-    lmctl project push <tnco-environment-name> 
-    ```
+> **Note:** Resource packages and related descriptors can be uploaded using LMCTL or the REST API. 
+In this example, LMCTL is used to upload the resource package and related descriptors. 
+
+  To upload the demo resource package, follow these steps:  
+  - Clone the TNC-O package examples repository:
+  ```
+  git clone https://github.com/IBM/tnco-package-examples
+  ```
+  - Retrieve the TNC-O environment on which to install the resource package:
+  ```
+  lmctl env list
+  ```
+  - Install the Apache Demo resource package:
+  ```
+  cd tnco-package-examples/apache-demo
+  lmctl project push <tnco-environment-name> 
+  ```
 5. Adopt the stack by way of the TNC-O REST API. For this procedure, use the curl CLI commands to access the _IBM Telco Network Cloud - Orchestration_ API.
 To access the TNC-O API, retrieve an Access Token for Authorization.
   1. Set the TNCO_URL environment variable to point to the API URL:
