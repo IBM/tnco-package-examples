@@ -133,7 +133,7 @@ In this example, LMCTL is used to upload the resource package and related descri
     2. Save the JSON content to a file named adoptRequest.json and modify the fields assemblyName, deploymentLocation, resources, and associatedTopology.id as necessary.
     3. Adopt the stack by using the following REST API call against the API:
     ```
-    curl -v --insecure -X POST -H "Authorization: Bearer $TNCO_TOKEN" -H "Content-Type: application/json" https://$TNCO_URL:443/api/intent/adoptAssembly -d @adoptRequest.json
+    curl -v --insecure -X POST -H "Authorization: Bearer ${TNCO_TOKEN}" -H "Content-Type: application/json" https://$TNCO_URL/api/intent/adoptAssembly -d @adoptRequest.json
     ```
 7. Check the status of the adopt intent in the IBM Telco Network Cloud - Orchestration User Interface.
 If the adopt API request is accepted, an HTTP 201 response is returned. At this point, the assembly appears in the Recent Assembly Instances view of the IBM Telco Network Cloud - Orchestration UI. The progress of the adopt intent can be monitored by opening the assembly and selecting the Execution tab.
