@@ -1,13 +1,13 @@
 ## Adopting an existing Openstack stack
-This example shows how to use this resource package, _IBM® Telco Network Cloud - Orchestration_ and the _OpenStack VIM driver_ to adopt a stack in OpenStack. 
+This example shows how to use this resource package, _IBM® Telco Network Cloud Manager - Orchestration_ and the _OpenStack VIM driver_ to adopt a stack in OpenStack. 
 
 ### Before beginning
 
 To follow this example, the following prerequisites are required:
 * OpenShift Container Platform (OCP) 4.5 or later.
-* IBM Telco Network Cloud - Orchestration Version 1.3.0 that is installed and ready on an OCP system.
-* [LMCTL v2.5.0+](https://github.com/IBM/lmctl) installed on a client computer and configured to communicate with an _IBM Telco Network Cloud - Orchestration_  instance.
-* OpenStack and Ansible Drivers that are installed and running in IBM Telco Network Cloud - Orchestration.
+* IBM Telco Network Cloud Manager - Orchestration Version 1.3.0 that is installed and ready on an OCP system.
+* [LMCTL v2.5.0+](https://github.com/IBM/lmctl) installed on a client computer and configured to communicate with an _IBM Telco Network Cloud Manager - Orchestration_  instance.
+* OpenStack and Ansible Drivers that are installed and running in IBM Telco Network Cloud Manager - Orchestration.
 * An OpenStack environment with available compute nodes and floating IP addresses. For testing, DevStack may be used.
   
 ##### OpenStack environment requires the following prerequisites:
@@ -16,20 +16,20 @@ To follow this example, the following prerequisites are required:
 * A public network that is included with a standard DevStack installation.
 * A key-pair named default of type SSH Key to be used by compute instances. This can be created through the OpenStack dashboard.
   
-##### IBM Telco Network Cloud - Orchestration environment requires the following drivers and deployment location:
+##### IBM Telco Network Cloud Manager - Orchestration environment requires the following drivers and deployment location:
 * The latest [OpenStack VIM Driver](https://github.com/IBM/openstack-vim-driver/releases/) installed and on-boarded.
 * The latest [Ansible Lifecycle Driver](https://github.com/IBM/ansible-lifecycle-driver/releases) installed and on-boarded.
-* A valid Deployment Location on-boarded to _IBM Telco Network Cloud - Orchestration_ with the necessary properties that are required by the OpenStack VIM Driver and the Ansible Lifecycle Driver.
+* A valid Deployment Location on-boarded to _IBM Telco Network Cloud Manager - Orchestration_ with the necessary properties that are required by the OpenStack VIM Driver and the Ansible Lifecycle Driver.
   
 ### About this task
 This task comprises the following primary steps:
 * Creating a stack in OpenStack to Adopt.
-* Onboarding OpenStack location in IBM Telco Network Cloud - Orchestration.
+* Onboarding OpenStack location in IBM Telco Network Cloud Manager - Orchestration.
 * Uploading the Apache Demo Resource Package.
 * Adopting the stack by way of the Rest API.
 
 ### Procedure
-1. The first task is to create a stack in OpenStack independently of IBM Telco Network Cloud - Orchestration so that it can be adopted in to IBM Telco Network Cloud - Orchestration. To create a stack, use, for example, the OpenStack command-line client that is available on the OpenStack system. Alternatively, the command-line client can be installed on to a local computer that has access to the OpenStack address.  
+1. The first task is to create a stack in OpenStack independently of IBM Telco Network Cloud Manager - Orchestration so that it can be adopted in to IBM Telco Network Cloud Manager - Orchestration. To create a stack, use, for example, the OpenStack command-line client that is available on the OpenStack system. Alternatively, the command-line client can be installed on to a local computer that has access to the OpenStack address.  
 
 For more information about installing OpenStack command-line clients, including troubleshooting openstack tools, see [here](https://docs.openstack.org/mitaka/user-guide/common/cli_install_openstack_command_line_clients.html).
 
@@ -56,8 +56,8 @@ For more information about installing OpenStack command-line clients, including 
     ```
     openstack stack list -c "ID" -c "Stack Name" -c "Stack Status"
     ```
-3. To communicate with the OpenStack Cluster, on-board it as a deployment location in IBM Telco Network Cloud - Orchestration.
-    1. Log in to _IBM Telco Network Cloud - Orchestration_ UI.
+3. To communicate with the OpenStack Cluster, on-board it as a deployment location in IBM Telco Network Cloud Manager - Orchestration.
+    1. Log in to _IBM Telco Network Cloud Manager - Orchestration_ UI.
     2. From the navigation, select Deployment Locations.
     3. Click Add.
     4. Enter a name for the location.
@@ -75,7 +75,7 @@ For more information about installing OpenStack command-line clients, including 
     "os_auth_project_id": "701600a059af40e1865a3c494288712a"
     ```
     8. Click Save.
-4. Upload the apache-demo resource package to the IBM Telco Network Cloud - Orchestration instance. The resource package contains the apache-demo assembly descriptor, the resource descriptor for the Apache2 server, a heat template, and configuration files. 
+4. Upload the apache-demo resource package to the IBM Telco Network Cloud Manager - Orchestration instance. The resource package contains the apache-demo assembly descriptor, the resource descriptor for the Apache2 server, a heat template, and configuration files. 
 > **Note:** Resource packages and related descriptors can be uploaded using LMCTL or the REST API. 
 In this example, LMCTL is used to upload the resource package and related descriptors. 
 
@@ -93,7 +93,7 @@ In this example, LMCTL is used to upload the resource package and related descri
   cd tnco-package-examples/apache-demo
   lmctl project push <tnco-environment-name> 
   ```
-5. Adopt the stack by way of the TNC-O REST API. For this procedure, use the curl CLI commands to access the _IBM Telco Network Cloud - Orchestration_ API. Set up the environment to invoke the IBM Telco Network Cloud Manager - Orchestration REST API.  
+5. Adopt the stack by way of the TNC-O REST API. For this procedure, use the curl CLI commands to access the _IBM Telco Network Cloud Manager - Orchestration_ API. Set up the environment to invoke the IBM Telco Network Cloud Manager - Orchestration REST API.  
    1. Set the TNCO_URL environment variable to point to the API URL:  
    ```
    export TNCO_URL=<ishtar_route>
@@ -105,7 +105,7 @@ In this example, LMCTL is used to upload the resource package and related descri
    
   For more information about how to retrieve the ishtar_route and access_token parameters, see the topic _Invoking REST API_ in the [IBM Telco Network Cloud Manager - Orchestration Knowledge Center](https://www.ibm.com/support/knowledgecenter/SSDSDC_1.3/welcome_page/kc_welcome-444.html).
 
-6. Run the Adopt API call to bring the stack under IBM Telco Network Cloud - Orchestration control.  
+6. Run the Adopt API call to bring the stack under IBM Telco Network Cloud Manager - Orchestration control.  
     1. Use the following JSON data to adopt the OpenStack stack created in the previous step:
    ```
             {
@@ -135,18 +135,18 @@ In this example, LMCTL is used to upload the resource package and related descri
     ```
     curl -v --insecure -X POST -H "Authorization: Bearer ${TNCO_TOKEN}" -H "Content-Type: application/json" https://$TNCO_URL/api/intent/adoptAssembly -d @adoptRequest.json
     ```
-7. Check the status of the adopt intent in the IBM Telco Network Cloud - Orchestration User Interface.
-If the adopt API request is accepted, an HTTP 201 response is returned. At this point, the assembly appears in the Recent Assembly Instances view of the IBM Telco Network Cloud - Orchestration UI. The progress of the adopt intent can be monitored by opening the assembly and selecting the Execution tab.
-The Apache assembly is successfully adopted and is under the control of IBM Telco Network Cloud - Orchestration. It is in the Active state. However, the adopt intent does not start the Apache Server and it was not started manually.
+7. Check the status of the adopt intent in the IBM Telco Network Cloud Manager - Orchestration User Interface.
+If the adopt API request is accepted, an HTTP 201 response is returned. At this point, the assembly appears in the Recent Assembly Instances view of the IBM Telco Network Cloud Manager - Orchestration UI. The progress of the adopt intent can be monitored by opening the assembly and selecting the Execution tab.
+The Apache assembly is successfully adopted and is under the control of IBM Telco Network Cloud Manager - Orchestration. It is in the Active state. However, the adopt intent does not start the Apache Server and it was not started manually.
 
-8. Start the Apache server. To start the Apache server, stop and restart it in the IBM Telco Network Cloud - Orchestration UI.  
+8. Start the Apache server. To start the Apache server, stop and restart it in the IBM Telco Network Cloud Manager - Orchestration UI.  
     1. Select the apacheadopt assembly instance from Recent Assembly Instances.
     2. Click New intent, and select Make Inactive.
     3. Click New intent, and select Make Active.
     This step ensures that the Apache server starts. To verify it is successfully running, enter the public IP address of the adopted assembly in a browser. The Apache server landing page should be seen.</ul>
     
-   **Note:** The public IP address can be found in the properties section for the assembly when opened in the _IBM Telco Network Cloud - Orchestration_ UI.
+   **Note:** The public IP address can be found in the properties section for the assembly when opened in the _IBM Telco Network Cloud Manager - Orchestration_ UI.
 
-9. Finally, because the Apache assembly is now under the control of _IBM Telco Network Cloud - Orchestration_, it can be deleted from within _IBM Telco Network Cloud - Orchestration_.  
+9. Finally, because the Apache assembly is now under the control of _IBM Telco Network Cloud Manager - Orchestration_, it can be deleted from the UI.  
 To delete the apacheadopt assembly instance, click _New Intent_ and select Uninstall.  
 The stack will be removed in OpenStack.
