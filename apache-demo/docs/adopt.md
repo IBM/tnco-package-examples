@@ -33,7 +33,7 @@ This task comprises the following primary steps:
 
 For more information about installing OpenStack command-line clients, including troubleshooting openstack tools, see [here](https://docs.openstack.org/mitaka/user-guide/common/cli_install_openstack_command_line_clients.html).
 
-2. Create the stack by using the heat template file that is bundled as part of the Apache demo assembly example, [heat.yaml] (../Contains/hw-apache-vnfc/Lifecycle/Openstack/heat.yaml). 
+2. Create the stack by using the heat template file that is bundled as part of the Apache demo assembly example, [heat.yaml](../Contains/hw-apache-vnfc/Lifecycle/Openstack/heat.yaml). 
 
     1. Use the following command to create the stack: 
     ```
