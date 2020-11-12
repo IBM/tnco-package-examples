@@ -10,6 +10,9 @@ properties:
   flavor:
     default: m1.small
     description: Type of instance (flavor) to be used
+  public_network: 
+    default: public
+    description: Name of the OpenStack public network with associated floating IPs
   internal_ip:
     read-only: true
     description: IP assigned to the server on the internal network

@@ -8,22 +8,69 @@
     {% endif %}
   tasks: 
 
-  - name: Copy the ca certificates from file
-    copy:
-      src: "{{ properties.cacert_file }}"
-      dest: "/tmp/cacert.pem"
-    when: "properties is defined and properties.cacert_file is defined"
-  
-  - name: Copy the ca certificates from variable
-    copy:
-      content: "{{ deployment_location.properties.os_cacert }}"
-      dest: "/tmp/cacert.pem"
-    when: "deployment_location.properties.os_cacert is defined"
-
   - name: Retrieve the stack id
     set_fact:
       input_stack_id: "{{ item.value.id }}"
     with_dict: "{{ associated_topology }}"
+    
+  - name: Copy the heat template to the remote host
+    copy: 
+      src: "./Openstack/heat.yaml"
+      dest: "/tmp/heat.yaml"
+
+  - name: Copy the ca certificates from file
+    copy:
+      src: "{{ properties.cacert_file }}"
+      dest: "/tmp/cacert.pem"
+    when: "properties is defined and properties.cacert_file is defined and properties.cacert_file != ''"
+
+  - name: Copy the ca certificates from deployment location
+    copy:
+      content: "{{ deployment_location.properties.os_cacert }}"
+      dest: "/tmp/cacert.pem"
+    when: "deployment_location.properties.os_cacert is defined" 
+
+  - name: ca certificates exist
+    set_fact:
+      ca_cert_exists: "true"
+    when: (deployment_location.properties.os_cacert is defined) or 
+          (properties is defined and properties.cacert_file is defined and properties.cacert_file != '')
+      
+  - name: Copy the client certificates from file
+    copy:
+      src: "{{ properties.cert_file }}"
+      dest: "/tmp/cert.pem"
+    when: "properties is defined and properties.cert_file is defined and properties.cert_file != ''"
+        
+  - name: Copy the client certificates from deployment location
+    copy:
+      content: "{{ deployment_location.properties.os_cert }}"
+      dest: "/tmp/cert.pem"
+    when: "deployment_location.properties.os_cert is defined" 
+
+  - name: client certificates exist
+    set_fact:
+      client_cert_exists: "true"
+    when: (deployment_location.properties.os_cert is defined) or 
+          (properties is defined and properties.cert_file is defined and properties.cert_file != '')
+    
+  - name: Copy the client key from file
+    copy:
+      src: "{{ properties.key_file }}"
+      dest: "/tmp/key"
+    when: "properties is defined and properties.key is defined  and properties.key != ''"
+        
+  - name: Copy the client key from deployment location
+    copy:
+      content: "{{ deployment_location.properties.os_key }}"
+      dest: "/tmp/key"
+    when: "deployment_location.properties.os_key is defined" 
+
+  - name: client key exists
+    set_fact:
+      client_key_exists: "true"
+    when: (deployment_location.properties.os_key is defined) or 
+          (properties is defined and properties.key is defined and properties.key != '')
   
   - name: Get the token 
     register: get_token
@@ -32,7 +79,9 @@
       method: POST
       status_code: 201
       body_format: json
-      validate_certs: False
+      client_cert: "{{ '/tmp/cert.pem' if client_cert_exists is defined and client_cert_exists else omit }}"
+      client_key: "{{ '/tmp/key' if client_key_exists is defined and client_key_exists else omit }}"
+      # validate_certs: "False"
       body: 
         auth: 
           identity: 
@@ -43,10 +92,11 @@
                  name: "{{ deployment_location.properties.os_auth_user_domain_name }}"
                name: "{{ deployment_location.properties.os_auth_username }}"
                password: "{{ deployment_location.properties.os_auth_password }}"
-            scope: 
-              project:
-                domain: 
-                  name: "{{ deployment_location.properties.os_auth_project_domain_name }}"
+          scope: 
+            project:
+              domain: 
+                name: "{{ deployment_location.properties.os_auth_project_domain_name }}"
+              name: "{{ deployment_location.properties.os_auth_project_name }}"
 
   - name: Set the token
     set_fact:
@@ -66,7 +116,9 @@
       url: "{{ heat_endpoint_url }}/stacks"
       method: GET
       status_code: 200
-      validate_certs: False
+      client_cert: "{{ '/tmp/cert.pem' if client_cert_exists is defined and client_cert_exists else omit }}"
+      client_key: "{{ '/tmp/key' if client_key_exists is defined and client_key_exists else omit }}"
+      # validate_certs: "False"
       headers:
         X-Auth-Token: "{{ auth_token }}"
 
@@ -86,7 +138,9 @@
       url: "{{ heat_endpoint_url }}/stacks/{{ stack_to_adopt.stack_name }}/{{ stack_to_adopt.id }}"
       method: GET
       status_code: 200
-      validate_certs: False
+      client_cert: "{{ '/tmp/cert.pem' if client_cert_exists is defined and client_cert_exists else omit }}"
+      client_key: "{{ '/tmp/key' if client_key_exists is defined and client_key_exists else omit }}"
+      # validate_certs: "False"
       headers:
         X-Auth-Token: "{{ auth_token }}"
 
@@ -111,14 +165,14 @@
       ansible_ssh_pass: ubuntu
       ansible_become_pass: ubuntu
       ansible_sudo_pass: ubuntu
-      group: adopted-apache
+      group: adopted_apache
       ansible_ssh_common_args: >
         {% if properties is defined and properties.jumphost_ip is defined %}
            -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ProxyCommand='sshpass -p "{{ properties.jumphost_password }}" ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -W %h:%p "{{ properties.jumphost_user }}"@"{{ properties.jumphost_ip }}"'
         {% endif %}
       
 - name: Verify the apache server
-  hosts: adopted-apache
+  hosts: adopted_apache
   tasks:
   - name: check the apache server status
     service_facts:

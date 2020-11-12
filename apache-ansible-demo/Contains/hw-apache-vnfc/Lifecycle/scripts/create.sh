@@ -16,6 +16,13 @@ OS_AUTH_PASSWORD="password"
 # OS_AUTH_USER_DOMAIN_NAME="default"
 # Full path to the CA certificate
 # OS_CACERT_FILE="/root/certs/ca.pem"
+# Full path to the client certificate
+# OS_CLIENT_CERT_FILE="/root/certs/cert.pem"
+# Full path to the client key
+# OS_KEY_FILE="/root/keys/key"
+
+### HEAT template input parameters:
+# PUBLIC_NETWORK="public"
 
 ### Configuration parameters for the apache server:
 # APACHE_SITE="hw"
@@ -55,6 +62,22 @@ else
   OS_CACERT="$OS_CACERT_FILE" 
 fi
 
+if [ -z "$OS_CLIENT_CERT_FILE" ]; then
+  OS_CLIENT_CERT=""
+else
+  OS_CLIENT_CERT="$OS_CLIENT_CERT_FILE" 
+fi
+
+if [ -z "$OS_KEY_FILE" ]; then
+  OS_KEY=""
+else
+  OS_KEY="$OS_KEY_FILE" 
+fi
+
+if [ -z "$PUBLIC_NETWORK" ]; then
+  PUBLIC_NETWORK="default"
+fi
+
 if [ -z "$APACHE_SITE" ]; then
   APACHE_SITE="hw"
 fi
@@ -78,7 +101,7 @@ properties="{properties: {"
 if [ -n "$REMOTE_HOST" ] && [ -n "$REMOTE_USER" ] && [ -n "$REMOTE_PASSWORD" ]; then
   properties+="remote_host: '$REMOTE_HOST', remote_user: '$REMOTE_USER', remote_pass: '$REMOTE_PASSWORD', " 
 fi
-properties+="cacert_file: '$OS_CACERT'}}"
+properties+="public_network: '$PUBLIC_NETWORK', cacert_file: '$OS_CACERT', cert_file: '$OS_CLIENT_CERT', key_file: '$OS_KEY'}}"
 
 echo "Creating the stack.."
 result="$( ansible-playbook  -i ../ansible/config/inventory  -e "$deployment_location" -e "$properties" ../ansible/scripts/Create.yaml )"
@@ -90,7 +113,9 @@ if [ "$ret" -ne 0 ]; then
 fi 
 
 ### Set properties
-apache_ip="$( echo "$result" | grep -A1 "TASK \[set public ip\]" | grep "ok:" | awk -F\' '{ print $4 }' )"
+# result="$( echo "$result" | grep -A1 "TASK \[set public ip\]" | grep "ok:" )"
+result=${result//\'/}
+apache_ip="$( echo "$result"  | grep -A2 "TASK \[set public ip\]" | grep "ok:" | awk -F'[ {},]' '{for(i=1; i<=NF; i++) if($i=="output_value:") print $(i+1) }' )"
 properties="{properties: {"
 if [ -n "$JUMPHOST_IP" ] && [ -n "$JUMPHOST_USER" ] && [ -n "$JUMPHOST_PASSWORD" ]; then
   properties+="jumphost_ip: '$JUMPHOST_IP', jumphost_user: '$JUMPHOST_USER', jumphost_password: '$JUMPHOST_PASSWORD', "
@@ -100,7 +125,7 @@ properties+="public_ip: '$apache_ip', site_name: '$APACHE_SITE', site_port: '$AP
 
 ### Install
 echo "Installing the apache server $apache_ip.."
-sleep 300
+sleep 500
 result="$( ansible-playbook  -i ../ansible/config/inventory  -e "$properties" ../ansible/scripts/Install.yaml )"
 
 ret="$?"

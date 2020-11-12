@@ -17,7 +17,7 @@
     copy:
       src: "{{ properties.cacert_file }}"
       dest: "/tmp/cacert.pem"
-    when: "properties is defined and properties.cacert_file is defined"
+    when: "properties is defined and properties.cacert_file is defined and properties.cacert_file != ''"
 
   - name: Copy the ca certificates from deployment location
     copy:
@@ -25,6 +25,48 @@
       dest: "/tmp/cacert.pem"
     when: "deployment_location.properties.os_cacert is defined" 
 
+  - name: ca certificates exist
+    set_fact:
+      ca_cert_exists: "true"
+    when: (deployment_location.properties.os_cacert is defined) or 
+          (properties is defined and properties.cacert_file is defined and properties.cacert_file != '')
+      
+  - name: Copy the client certificates from file
+    copy:
+      src: "{{ properties.cert_file }}"
+      dest: "/tmp/cert.pem"
+    when: "properties is defined and properties.cert_file is defined and properties.cert_file != ''"
+        
+  - name: Copy the client certificates from deployment location
+    copy:
+      content: "{{ deployment_location.properties.os_cert }}"
+      dest: "/tmp/cert.pem"
+    when: "deployment_location.properties.os_cert is defined" 
+
+  - name: client certificates exist
+    set_fact:
+      client_cert_exists: "true"
+    when: (deployment_location.properties.os_cert is defined) or 
+          (properties is defined and properties.cert_file is defined and properties.cert_file != '')
+    
+  - name: Copy the client key from file
+    copy:
+      src: "{{ properties.key_file }}"
+      dest: "/tmp/key"
+    when: "properties is defined and properties.key is defined  and properties.key != ''"
+        
+  - name: Copy the client key from deployment location
+    copy:
+      content: "{{ deployment_location.properties.os_key }}"
+      dest: "/tmp/key"
+    when: "deployment_location.properties.os_key is defined" 
+
+  - name: client key exists
+    set_fact:
+      client_key_exists: "true"
+    when: (deployment_location.properties.os_key is defined) or 
+          (properties is defined and properties.key is defined and properties.key != '')
+    
   - name: Create a new stack
     register: stack_create
     os_stack:
@@ -38,12 +80,16 @@
         project_name: "{{ deployment_location.properties.os_auth_project_name }}"
         project_domain_name: "{{ deployment_location.properties.os_auth_project_domain_name }}"
         user_domain_name: "{{ deployment_location.properties.os_auth_user_domain_name }}"
-      cacert: "/tmp/cacert.pem"
+      key: "{{ '/tmp/key' if client_key_exists is defined and client_key_exists else omit }}"
+      cacert: "{{ '/tmp/cacert.pem' if ca_cert_exists is defined and ca_cert_exists else omit }}"
+      cert: "{{ '/tmp/cert.pem' if client_cert_exists is defined and client_cert_exists else omit }}"
+      # validate_certs: "no"
       template: "/tmp/heat.yaml"
       parameters:
-        key_name: "{{ properties.key_name }}"
-        image_id: "{{ properties.image_id }}"
-        flavor: "{{ properties.flavor }}"
+        key_name: "{{ properties.key_name if properties is defined and properties.key_name is defined else 'default' }}"
+        image_id: "{{ properties.image_id if properties is defined and properties.image_id is defined else 'bionic-server-cloudimg-amd64.img' }}"
+        flavor: "{{ properties.flavor if properties is defined and properties.flavor is defined else 'm1.small' }}"
+        public_network: "{{ properties.public_network if properties is defined and properties.public_network is defined else 'public' }}"
         
   - name: set associated topology
     set_fact:
@@ -62,4 +108,3 @@
     loop:
        "{{ stack_create.stack.outputs }}"
     when: "'internal_ip' in item.output_key"
-      
