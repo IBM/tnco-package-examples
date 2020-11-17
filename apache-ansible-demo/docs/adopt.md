@@ -83,11 +83,18 @@ The script runs the ansible playbooks contained in the resource package to creat
    For more information about how to retrieve the ishtar_route and access_token parameters, see the topic _Invoking REST API_ in the [IBM Telco Network Cloud Manager - Orchestration Knowledge Center](https://www.ibm.com/support/knowledgecenter/SSDSDC_1.3/welcome_page/kc_welcome-444.html).
 
 7. Upload the apache-ansible-demo resource package to the IBM Telco Network Cloud Manager - Orchestration instance. You can upload resource packages and related descriptors using LMCTL or the REST API. In this example, the REST API commands are used to upload the resource package and related descriptors.
-```
-cd ../../
-zip -r  apache-ansible-demo .
-curl -sk -X POST "https://$TNCO_URL/api/resource-manager/resource-packages" -H 'Authorization: Bearer '"${TNCO_TOKEN}"'' -H 'Content-Type: multipart/form-data' -F "file=@./apache-ansible-demo.zip"
-```  
+   1. Navigate to the _hw-apache-vnfc_ folder:
+   ```
+   cd ../../
+   ```
+   2. Create a zip file containing the resource package:
+   ```
+   zip -r  apache-ansible-demo .
+   ```
+   3. Upload the resource package to IBM Telco Network Cloud Manager - Orchestration:
+   ```
+   curl -sk -X POST "https://$TNCO_URL/api/resource-manager/resource-packages" -H 'Authorization: Bearer '"${TNCO_TOKEN}"'' -H 'Content-Type: multipart/form-data' -F "file=@./apache-ansible-demo.zip"
+   ```  
 8. Upload the resource and assembly descriptors to the IBM Telco Network Cloud Manager - Orchestration instance:
 ```
 cd Definitions/lm
