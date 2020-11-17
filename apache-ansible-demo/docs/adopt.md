@@ -129,6 +129,7 @@ curl -sk -0 -X POST "https://$TNCO_URL/api/intent/adoptAssembly" -H 'Authorizati
         }
     }
 }
+EOF
 ```
 
 10. Verify that the stack is adopted successfully.  
