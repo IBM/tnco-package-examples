@@ -11,7 +11,7 @@ To follow this example, you require the following prerequisites:
 * An installed instance of IBM Telco Network Cloud Manager - Orchestration.
 * The Ansible Lifecycle Driver on-boarded.
 * The Deployment Location created that describes the OpenStack environment.
-* The system on which the example's steps are run has ansible, sshpass, and zip installed.
+* The system on which the example's steps are run has ansible, openstacksdk, sshpass, and zip installed.
 * The system on which the example's steps are run and the instance of IBM Telco Network Cloud Manager - Orchestration has connectivity to the floating IP addresses configured in OpenStack.
 * The system on which the example's steps are run has the environment variable ANSIBLE_HOST_KEY_CHECKING set to False and any host entries related to the floating IP addresses configured in OpenStack are removed from the known_hosts file
 
