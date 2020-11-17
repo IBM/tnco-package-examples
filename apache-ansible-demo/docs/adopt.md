@@ -105,7 +105,7 @@ curl -sk -H 'Accept: */*' -X POST -H 'Content-Type: application/yaml' -H 'Author
 9. Adopt the stack. Save the stack ID, the deployment location's name, and the name of the assembly that is created by the Adopt intent:
 ```
 export ASSEMBLY_NAME=<adopted_assembly_name>
-export DEPLOYMENT_LOCATION="openstack_deployment_location>
+export DEPLOYMENT_LOCATION=<openstack_deployment_location>
 export STACK_ID=<stack_id>
 ```
 Start the Adopt REST API to adopt the stack:
