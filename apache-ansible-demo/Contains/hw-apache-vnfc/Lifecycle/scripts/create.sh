@@ -75,7 +75,7 @@ else
 fi
 
 if [ -z "$PUBLIC_NETWORK" ]; then
-  PUBLIC_NETWORK="default"
+  PUBLIC_NETWORK="public"
 fi
 
 if [ -z "$APACHE_SITE" ]; then
